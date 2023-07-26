@@ -16,10 +16,11 @@ class FIFOCache(BaseCaching):
 
     def put(self, key, item):
         """Add an item to our cache"""
+        maxim = BaseCaching.MAX_ITEMS
         if key is None or item is None:
             return
 
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS and key not in self.keys:
+        if len(self.cache_data) >= maxim and key not in self.keys:
             removable_key = self.keys.pop(0)
             self.cache_data.pop(removable_key)
             print("DISCARD: {}".format(removable_key))

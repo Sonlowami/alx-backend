@@ -6,7 +6,7 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 class LIFOCache(BaseCaching):
     """Implement a LIFO cache structure based on the structure defined in
-    BaseCaching. The data structure to hold our cache data will be in 
+    BaseCaching. The data structure to hold our cache data will be in
     self.cache_data
     """
 
@@ -17,9 +17,10 @@ class LIFOCache(BaseCaching):
 
     def put(self, key, item):
         """Add a new item to the cache"""
+        maxim = BaseCaching.MAX_ITEMS
         if key is None and item is None:
             return
-        if len(self.cache_data) >= BaseCaching.MAX_ITEMS and key not in self.keys:
+        if len(self.cache_data) >= maxim and key not in self.keys:
             removable_key = self.keys.pop()
             self.cache_data.pop(removable_key)
             print("DISCARD: {}".format(removable_key))

@@ -1,14 +1,14 @@
 #!/usr/bin/python3
-"""Implement a class LRUCache to cache by least recently used policy"""
+"""Implement a class MRUCache to cache by most recently used policy"""
 
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LRUCache(BaseCaching):
-    """Impliment a least recently used cache system"""
+class MRUCache(BaseCaching):
+    """Impliment a most recently used cache system"""
 
     def __init__(self):
-        """Initialize an LRU cache"""
+        """Initialize a MRU cache"""
         self.keys = []
         self.indices = {}
         super().__init__()
@@ -19,14 +19,12 @@ class LRUCache(BaseCaching):
         if key is None or item is None:
             return
         if len(self.cache_data) >= maxim and key not in self.keys:
-            removable_key = self.keys.pop(0)
+            removable_key = self.keys.pop()
             self.indices.pop(removable_key)
             self.cache_data.pop(removable_key)
-            self.update_values(self.indices, -1)
             print("DISCARD: {}".format(removable_key))
 
         self.cache_data[key] = item
-        self.update_values(self.indices, -1)
         if key in self.keys:
             # First remove the existing key in the keys array if any
             item = self.keys.pop(self.indices.get(key))
@@ -40,14 +38,12 @@ class LRUCache(BaseCaching):
             value = self.cache_data[key]
             index = self.indices[key]
             item = self.keys.pop(index)
-            self.update_values(self.indices, -1)
+            # We now update indices that fall behind the removed item
+            affected = self.keys[index:]
+            for k in affected:
+                self.indices[k] = self.indices.get(k) - 1
             self.indices[key] = len(self.keys)
             self.keys.append(item)
             return value
         except KeyError:
             return None
-
-    def update_values(self, iterable, factor):
-        """Update the numeric value of a dictionary iterable"""
-        for k, v in iterable.items():
-            iterable[k] = v + factor
